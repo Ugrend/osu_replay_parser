@@ -75,15 +75,18 @@ class ReplayParser:
             'tCombo': self.__get_short(),
             'hMisses': self.__get_short(),
             'fullClear': self.__get_byte(),
-            'mods': self.__get_mods(self.__get_int()),
+            'mods': self.__get_int(),
             'lifeBar': self.__get_string(),
-            'time_played': (self.__get_long() - 621355968000000000) / 10000,
+            'time_played': int((self.__get_long() - 621355968000000000) / 10000),
             'replayByteLength': self.__get_int(),
-            'replayData': self.__decode_replay()
         }
+        self.replay['replayData'] =self.__decode_replay()
         for k, v in self.replay.items():
             setattr(self, k, v)
         self.loaded = True
+
+    def get_mods(self):
+        return self.__get_mods(self.replay['mods'])
 
     def to_json(self, indent=None):
         if self.loaded:
@@ -165,7 +168,7 @@ class ReplayParser:
 
     def __decode_replay(self):
         replay_data = []
-        lzma_data = self.data[self.__byteIndex:]
+        lzma_data = self.data[self.__byteIndex:self.__byteIndex+self.replay['replayByteLength']]
         replay_events = lzma.decompress(lzma_data, format=lzma.FORMAT_AUTO).decode('ascii')[:-1].split(",")
         last_time_frame = 0
         for i in replay_events:
@@ -187,5 +190,6 @@ class ReplayParser:
 
 if __name__ == "__main__":
     r = ReplayParser()
-    r.load_from_file('replay.osr')
+    r.load_from_file('main.py')
     print(r.to_json(indent=4))
+
