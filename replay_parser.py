@@ -60,27 +60,14 @@ class ReplayParser:
 
     def load_replay(self, data):
         self.data = data
-        self.replay = {
-            'type': self.__get_byte(),
-            'version': self.__get_int(),
-            'bmMd5Hash': self.__get_string(),
-            'playerName': self.__get_string(),
-            'rMd5Hash': self.__get_string(),
-            'h300': self.__get_short(),
-            'h100': self.__get_short(),
-            'h50': self.__get_short(),
-            'hGekis': self.__get_short(),
-            'hKatus': self.__get_short(),
-            'tScore': self.__get_int(),
-            'tCombo': self.__get_short(),
-            'hMisses': self.__get_short(),
-            'fullClear': self.__get_byte(),
-            'mods': self.__get_int(),
-            'lifeBar': self.__get_string(),
-            'time_played': int((self.__get_long() - 621355968000000000) / 10000),
-            'replayByteLength': self.__get_int(),
-        }
-        self.replay['replayData'] =self.__decode_replay()
+        self.replay = {'type': self.__get_byte(), 'version': self.__get_int(), 'bmMd5Hash': self.__get_string(),
+                       'playerName': self.__get_string(), 'rMd5Hash': self.__get_string(), 'h300': self.__get_short(),
+                       'h100': self.__get_short(), 'h50': self.__get_short(), 'hGekis': self.__get_short(),
+                       'hKatus': self.__get_short(), 'tScore': self.__get_int(), 'tCombo': self.__get_short(),
+                       'hMisses': self.__get_short(), 'fullClear': self.__get_byte(), 'mods': self.__get_int(),
+                       'lifeBar': self.__get_string(),
+                       'time_played': int((self.__get_long() - 621355968000000000) / 10000),
+                       'replayByteLength': self.__get_int(), 'replayData': self.__decode_replay()}
         for k, v in self.replay.items():
             setattr(self, k, v)
         self.loaded = True
